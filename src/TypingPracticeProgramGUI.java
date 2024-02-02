@@ -17,7 +17,14 @@ public class TypingPracticeProgramGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
+		createMenuBar();
+
 		add(createCommandPanel(), BorderLayout.NORTH);
+
+		textWindow = new JTextArea();
+		add(textWindow, BorderLayout.CENTER);
+
+		add(createTypeWordPanel(), BorderLayout.SOUTH);
 
 		setSize(450, 400);
 		setVisible(true);
@@ -25,18 +32,10 @@ public class TypingPracticeProgramGUI extends JFrame {
 	
 	public JPanel createCommandPanel() {
 		JPanel commandPanel = new JPanel();
-		commandPanel.setLayout(new GridLayout(3, 1));
+		commandPanel.setLayout(new GridLayout(2, 1));
 
-		JMenuBar menuBar = new JMenuBar();
-		JMenu filMenu = new JMenu("file");
-		
-		filMenu.add(new JMenuItem("Load"));
-		filMenu.add(new JMenuItem("Exit"));
-
-		menuBar.add(filMenu);
-
-		commandPanel.add(menuBar);
 		commandPanel.add(createDeletePanel());
+		commandPanel.add(createExercisePanel());
 
 		return commandPanel;
 	}
@@ -44,18 +43,46 @@ public class TypingPracticeProgramGUI extends JFrame {
 	public JPanel createDeletePanel() {
 		JPanel deletePanel = new JPanel();
 		deletePanel.setLayout(new FlowLayout());
+
+		deletePanel.add(new JLabel("Delete what: "));
+
+		deleteWhatTextField = new JTextField(14);
+		deletePanel.add(deleteWhatTextField);
+
+		deletePanel.add(new JButton("Delete"));
+
 		return deletePanel;
 	}
 
 	public JPanel createExercisePanel() {
 		JPanel exercisePanel = new JPanel();
 		exercisePanel.setLayout(new FlowLayout());
+
+		exercisePanel.add(new JLabel("Words: "));
+
+		typeWordTextField = new JTextField(5);
+		exercisePanel.add(typeWordTextField);
+
+		exercisePanel.add(new JLabel("Width: "));
+		
+		widthOfLineTextField = new JTextField(5);
+		exercisePanel.add(widthOfLineTextField);
+
+		exercisePanel.add(new JButton("Make"));
+		exercisePanel.add(new JButton("Reset"));
+
 		return exercisePanel;
 	}
 
 	public JPanel createTypeWordPanel() {
 		JPanel typeWordPanel = new JPanel();
 		typeWordPanel.setLayout(new FlowLayout());
+
+		typeWordPanel.add(new JLabel("Enter a Word: "));
+
+		numOfWordTextField = new JTextField(14);
+		typeWordPanel.add(numOfWordTextField);
+
 		return typeWordPanel;
 	}
 
@@ -84,7 +111,15 @@ public class TypingPracticeProgramGUI extends JFrame {
 	}
 	
 	public void createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu filMenu = new JMenu("File");
+		
+		filMenu.add(new JMenuItem("Load"));
+		filMenu.add(new JMenuItem("Exit"));
 
+		menuBar.add(filMenu);
+
+		setJMenuBar(menuBar);
 	}
 	
 	class FileMenuActionListener implements ActionListener {
@@ -92,6 +127,6 @@ public class TypingPracticeProgramGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		TypingPracticeProgramGUI typingPracticeProgramGUI = new TypingPracticeProgramGUI();
+		new TypingPracticeProgramGUI();
 	}
 }
