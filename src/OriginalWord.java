@@ -25,12 +25,12 @@ public class OriginalWord {
 	// if otherWord is same to originalWord, return true.
 	// otherwise, return false. 
 	public boolean isSameOriginalWord(String otherWord) {
-		return true;
+		return this.originalWord.equals(otherWord);
 	}
 
 	// to return string for this object. The format is as follows.
 	// originalWord = originalWord value
 	public String toString() {
-		return this.originalWord;
+		return "originalWord = " + this.originalWord;
 	}
 }

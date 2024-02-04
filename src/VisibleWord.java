@@ -31,29 +31,31 @@ public class VisibleWord extends OriginalWord{
 	
 	// to set originalWord and visibleWord simultaneously
 	public void insert(String word) {
-
+		setOriginalWord(word);
+        setVisibleWord(word);
 	}
 	
 	// if otherWord is same to visibleWord, return true.
 	// otherwise, return false. 
 	public boolean isSameVisibleWord(String otherWord) {
-		return true;
+		return this.visibleWord.equals(otherWord);
 	}
 	
 	// copy originalWord and visibleWord from otherWord object
 	public void copyFrom(VisibleWord otherWord) {
-
+		setOriginalWord(otherWord.getOriginalWord());
+        setVisibleWord(otherWord.getVisibleWord());
 	}
 	
 	// initialize originalWord and visibleWord 
 	public void initialize() {
-
+		setOriginalWord("");
+        setVisibleWord("");
 	}
 
 	// to return string for this object. The format is as follows.
 	// originalWord = originalWord value, visibleWord = visibleWord value
 	public String toString() {
-		String a = "";
-		return a;
+		return "originalWord = " + getOriginalWord() + ", visibleWord = " + this.visibleWord;
 	}
 }

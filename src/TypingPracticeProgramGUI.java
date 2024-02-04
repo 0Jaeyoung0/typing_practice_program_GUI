@@ -62,8 +62,8 @@ public class TypingPracticeProgramGUI extends JFrame {
 
 		exercisePanel.add(createLabelPanel("Words:"));
 
-		typeWordTextField = new JTextField(5);
-		exercisePanel.add(typeWordTextField);
+		numOfWordTextField = new JTextField(5);
+		exercisePanel.add(numOfWordTextField);
 
 		exercisePanel.add(createLabelPanel("Width:"));
 		
@@ -84,10 +84,28 @@ public class TypingPracticeProgramGUI extends JFrame {
 
 		typeWordPanel.add(createLabelPanel("Enter a Word:"));
 
-		numOfWordTextField = new JTextField(14);
-		typeWordPanel.add(numOfWordTextField);
+		typeWordTextField = new JTextField(14);
+		TextFieldActionListerer listerer = new TextFieldActionListerer();
+		typeWordTextField.addActionListener(listerer);
+
+		typeWordPanel.add(typeWordTextField);
 
 		return typeWordPanel;
+	}
+
+	class TextFieldActionListerer implements ActionListener {
+		public void  actionPerformed(ActionEvent e) {
+			String text = e.getActionCommand();
+
+			numOfCorrectWord = wordManager.checkAnswer(text);
+			textWindow.setText(wordManager.displayExercise());
+			typeWordTextField.setText("");
+
+			if(numOfCorrectWord == countOfWord) {
+				JOptionPane.showMessageDialog(null, "Stage clear. Congratulation!!", "information", JOptionPane.INFORMATION_MESSAGE);
+				reset();
+			}
+		}
 	}
 
 	public JPanel createLabelPanel(String labelTitle) {
@@ -118,27 +136,45 @@ public class TypingPracticeProgramGUI extends JFrame {
 
 					if(deletedWord.trim().isEmpty())
 						JOptionPane.showMessageDialog(null, "You should enter words you want to delete", "Warning", JOptionPane.WARNING_MESSAGE);
-
-					break;
-				case "Make":
-					String wordsText = typeWordTextField.getText();
-					String widthText = widthOfLineTextField.getText();
-	
-					if (wordsText.isEmpty() || widthText.isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Please enter values for both 'Words' and 'Width'", "Warning", JOptionPane.WARNING_MESSAGE);
-					} 
 					else {
-						try {
-							double words = Double.parseDouble(wordsText);
-							double width = Double.parseDouble(widthText);
-						} 
-						catch (NumberFormatException ex) {
-							JOptionPane.showMessageDialog(null, "Please enter valid numeric values for 'Words' and 'Width'", "Error", JOptionPane.WARNING_MESSAGE);
+						int deletedCount = wordManager.delete(deletedWord);
+						deleteWhatTextField.setText("");
+
+						if(deletedCount == 0)
+							JOptionPane.showMessageDialog(null, "Can not find \"" + deletedWord + "\"", "information", JOptionPane.INFORMATION_MESSAGE);
+						else {
+							wordManager.print(textWindow);
+							JOptionPane.showMessageDialog(null, deletedCount + " word(s) are deleted", "information", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 
 					break;
+				case "Make":
+					String wordsText = numOfWordTextField.getText();
+					String widthText = widthOfLineTextField.getText();
+	
+					if (wordsText.isEmpty() || widthText.isEmpty())
+						JOptionPane.showMessageDialog(null, "You should enter the number of words and width of one line for typing exercise", "Warning", JOptionPane.WARNING_MESSAGE);
+					else {
+						try {
+							countOfWord = Integer.parseInt(wordsText);
+							int width = Integer.parseInt(widthText);
+
+							wordManager.makeExercise(countOfWord, width);
+							textWindow.setText(wordManager.displayExercise());
+						} 
+						catch (NumberFormatException ex) {
+							JOptionPane.showMessageDialog(null, "You should enter only number for typing exercise", "Warning", JOptionPane.WARNING_MESSAGE);
+						}
+
+						numOfWordTextField.setText("");
+						widthOfLineTextField.setText("");
+					}
+
+					break;
 				case "Reset":
+					reset();
+					JOptionPane.showMessageDialog(null, "reset is conducted", "information", JOptionPane.INFORMATION_MESSAGE);
 					break;
 			}
 		}
@@ -148,7 +184,17 @@ public class TypingPracticeProgramGUI extends JFrame {
 	// clear all textField and textArea
 	// initialize countOfWord and numOfCorrectWord
 	public void reset() {
-
+		wordManager.cleanExercisePool();
+		wordManager.cleanWordPool();
+		
+		textWindow.setText("");
+		numOfWordTextField.setText("");
+		widthOfLineTextField.setText("");
+		typeWordTextField.setText("");
+		deleteWhatTextField. setText("");
+		
+		countOfWord = -1;
+		numOfCorrectWord = 0;
 	}
 
 	// if all words are typed correctly, reset should be conducted.
